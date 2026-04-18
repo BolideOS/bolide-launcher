@@ -485,7 +485,7 @@ Item {
     ConfigurationValue {
         id: wallpaperSource
         key: "/desktop/bolide/background-filename"
-        defaultValue: "file:///usr/share/bolide-launcher/wallpapers/full/000-flatmesh.qml"
+        defaultValue: ""
 
         function updateWallpaper() {
             var endsWithQml = /qml$/;
@@ -512,6 +512,11 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         Behavior on opacity { NumberAnimation { duration: 400 } }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+        }
 
         Component {
             id: imageWallpaper
