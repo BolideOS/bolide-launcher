@@ -28,9 +28,9 @@
  * inspired by Jollas "The Bold Font" watchface.
  */
 
-import QtQuick 2.15
-import QtQuick.Shapes 1.15
-import QtGraphicalEffects 1.15
+import QtQuick 2.12
+import QtQuick.Shapes 1.0
+import QtGraphicalEffects 1.0
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0
 import Nemo.Mce 1.0

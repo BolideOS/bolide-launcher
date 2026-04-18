@@ -11,7 +11,7 @@
  */
 
 import QtQuick 2.9
-import QtGraphicalEffects 1.12
+import QtGraphicalEffects 1.0
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0
 

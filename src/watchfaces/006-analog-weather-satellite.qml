@@ -23,10 +23,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.15
-import QtQuick.Shapes 1.15
+import QtQuick 2.12
+import QtQuick.Shapes 1.0
 import QtSensors 5.11
-import QtGraphicalEffects 1.15
+import QtGraphicalEffects 1.0
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0
 import Nemo.Configuration 1.0
@@ -662,7 +662,7 @@ Item {
                     samples: 4
                     smooth: true
                     textureSize: Qt.size(root.width * 2, root.height * 2)
-                    // DropShadow depends on import QtGraphicalEffects 1.15
+                    // DropShadow depends on import QtGraphicalEffects 1.0
                     effect: DropShadow {
                         transparentBorder: true
                         horizontalOffset: 3

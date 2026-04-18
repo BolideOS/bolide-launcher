@@ -30,7 +30,7 @@
  */
 
 import QtQuick 2.9
-import QtGraphicalEffects 1.15
+import QtGraphicalEffects 1.0
 import QtMultimedia 5.8
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0

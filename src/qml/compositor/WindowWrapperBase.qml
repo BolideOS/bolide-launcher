@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 2.15
+import QtQuick 2.12
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0
 
