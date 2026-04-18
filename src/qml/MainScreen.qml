@@ -77,7 +77,7 @@ Item {
     property alias nightstand: nightstandMode.active
 
     onAboutToCloseChanged: grid.moveTo(0, 0)
-    onAboutToMinimizeChanged: grid.moveTo(0, 1)
+    onAboutToMinimizeChanged: grid.moveTo(0, 0)
 
     Component.onCompleted: {
         Desktop.desktop = desktop
