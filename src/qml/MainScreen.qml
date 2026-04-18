@@ -37,7 +37,7 @@ import org.nemomobile.lipstick 0.1
 import org.nemomobile.systemsettings 1.0
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0
-import org.asteroid.launcher 1.0
+import org.bolide.launcher 1.0
 import "desktop.js" as Desktop
 
 Item {
@@ -51,8 +51,8 @@ Item {
 
     AppLauncherBackground { id: alb }
 
-    property var defaultCenterColor: alb.centerColor("/usr/share/asteroid-launcher/default-colors.desktop")
-    property var defaultOuterColor: alb.outerColor("/usr/share/asteroid-launcher/default-colors.desktop")
+    property var defaultCenterColor: alb.centerColor("/usr/share/bolide-launcher/default-colors.desktop")
+    property var defaultOuterColor: alb.outerColor("/usr/share/bolide-launcher/default-colors.desktop")
 
     property var bgCenterColor: defaultCenterColor
     property var bgOuterColor: defaultOuterColor
@@ -104,13 +104,13 @@ Item {
 
     ConfigurationValue {
         id: bipLevel
-        key: "/org/asteroidos/settings/burn-in-protection-level"
+        key: "/org/bolideos/settings/burn-in-protection-level"
         defaultValue: DeviceSpecs.needsBurnInProtection ? 1.0 : 0.0
     }
 
     ConfigurationValue {
         id: alwaysOnDisplay
-        key: "/org/asteroidos/settings/always-on-display"
+        key: "/org/bolideos/settings/always-on-display"
         defaultValue: true
     }
 
@@ -179,7 +179,7 @@ Item {
 
     ConfigurationValue {
         id: use12H
-        key: "/org/asteroidos/settings/use-12h-format"
+        key: "/org/bolideos/settings/use-12h-format"
         defaultValue: false
     }
 
@@ -236,50 +236,50 @@ Item {
 
     ConfigurationValue {
         id: watchFaceSource
-        key: "/desktop/asteroid/watchface"
-        defaultValue: "file:///usr/share/asteroid-launcher/watchfaces/000-default-digital.qml"
+        key: "/desktop/bolide/watchface"
+        defaultValue: "file:///usr/share/bolide-launcher/watchfaces/000-default-digital.qml"
         onValueChanged: burnInProtectionManager.resetOffsets()
     }
 
     ConfigurationValue {
         id: appLauncherSource
-        key: "/desktop/asteroid/applauncher"
-        defaultValue: "file:///usr/share/asteroid-launcher/applauncher/000-default-horizontal.qml"
+        key: "/desktop/bolide/applauncher"
+        defaultValue: "file:///usr/share/bolide-launcher/applauncher/000-default-horizontal.qml"
     }
 
     ConfigurationValue {
         id: watchfaceNightstandSource
-        key: "/desktop/asteroid/nightstand/watchface"
-        defaultValue: "file:///usr/share/asteroid-launcher/watchfaces/000-default-digital.qml"
+        key: "/desktop/bolide/nightstand/watchface"
+        defaultValue: "file:///usr/share/bolide-launcher/watchfaces/000-default-digital.qml"
     }
 
     ConfigurationValue {
         id: nightstandBrightness
-        key: "/desktop/asteroid/nightstand/brightness"
+        key: "/desktop/bolide/nightstand/brightness"
         defaultValue: 30
     }
 
     ConfigurationValue {
         id: nightstandDelay
-        key: "/desktop/asteroid/nightstand/delay"
+        key: "/desktop/bolide/nightstand/delay"
         defaultValue: 5
     }
 
     ConfigurationValue {
         id: nightstandEnabled
-        key: "/desktop/asteroid/nightstand/enabled"
+        key: "/desktop/bolide/nightstand/enabled"
         defaultValue: true
     }
 
     ConfigurationValue {
         id: nightstandAlwaysOnDisplay
-        key: "/desktop/asteroid/nightstand/always-on-display"
+        key: "/desktop/bolide/nightstand/always-on-display"
         defaultValue: false
     }
 
     ConfigurationValue {
         id: nightstandUseCustomWatchface
-        key: "/desktop/asteroid/nightstand/use-custom-watchface"
+        key: "/desktop/bolide/nightstand/use-custom-watchface"
         defaultValue: false
     }
 
@@ -484,8 +484,8 @@ Item {
 // Wallpaper
     ConfigurationValue {
         id: wallpaperSource
-        key: "/desktop/asteroid/background-filename"
-        defaultValue: "file:///usr/share/asteroid-launcher/wallpapers/full/000-flatmesh.qml"
+        key: "/desktop/bolide/background-filename"
+        defaultValue: "file:///usr/share/bolide-launcher/wallpapers/full/000-flatmesh.qml"
 
         function updateWallpaper() {
             var endsWithQml = /qml$/;

@@ -84,10 +84,10 @@ int main(int argc, char **argv)
     app.engine()->rootContext()->setContextProperty("nativeOrientation", nativeOrientation);
     app.engine()->rootContext()->setContextProperty("firstRun", firstRun);
 
-    qmlRegisterType<AppLauncherBackground>("org.asteroid.launcher", 1, 0, "AppLauncherBackground");
-    qmlRegisterType<GestureFilterArea>("org.asteroid.launcher", 1, 0, "GestureFilterArea");
-    qmlRegisterType<NotificationSnoozer>("org.asteroid.launcher", 1, 0, "NotificationSnoozer");
-    qmlRegisterType<AppLauncher>("org.asteroid.launcher", 1, 0, "AppLauncher");
+    qmlRegisterType<AppLauncherBackground>("org.bolide.launcher", 1, 0, "AppLauncherBackground");
+    qmlRegisterType<GestureFilterArea>("org.bolide.launcher", 1, 0, "GestureFilterArea");
+    qmlRegisterType<NotificationSnoozer>("org.bolide.launcher", 1, 0, "NotificationSnoozer");
+    qmlRegisterType<AppLauncher>("org.bolide.launcher", 1, 0, "AppLauncher");
     app.setQmlPath("qrc:/qml/MainScreen.qml");
 
     // Give these to the environment inside the lipstick homescreen

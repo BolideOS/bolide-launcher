@@ -56,13 +56,13 @@ ListView {
 
     ConfigurationValue {
         id: use12H
-        key: "/org/asteroidos/settings/use-12h-format"
+        key: "/org/bolideos/settings/use-12h-format"
         defaultValue: false
     }
 
     ConfigurationValue {
         id: useFahrenheit
-        key: "/org/asteroidos/settings/use-fahrenheit"
+        key: "/org/bolideos/settings/use-fahrenheit"
         defaultValue: false
     }
 

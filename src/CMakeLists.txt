@@ -14,9 +14,9 @@ set(HEADERS
 	applauncher.h
 	notificationsnoozer.h)
 
-add_executable(asteroid-launcher ${SRC} ${HEADERS} resources-qml.qrc)
+add_executable(bolide-launcher ${SRC} ${HEADERS} resources-qml.qrc)
 
-target_link_libraries(asteroid-launcher PRIVATE
+target_link_libraries(bolide-launcher PRIVATE
 	Qt5::Quick
 	Qt5::WaylandCompositor
 	Qt5::DBus
@@ -24,14 +24,14 @@ target_link_libraries(asteroid-launcher PRIVATE
 	Lipstick::Lipstick
 	Timed::Timed)
 
-install(TARGETS asteroid-launcher
+install(TARGETS bolide-launcher
 	DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 install(DIRECTORY watchfaces
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/asteroid-launcher)
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)
 install(DIRECTORY watchfaces-img
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/asteroid-launcher)
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)
 install(DIRECTORY watchfaces-preview
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/asteroid-launcher)
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)
 install(DIRECTORY applauncher
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/asteroid-launcher)
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)

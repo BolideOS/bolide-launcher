@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.6.0)
 
-project(asteroid-launcher
+project(bolide-launcher
 	VERSION 0.0.1
-	DESCRIPTION "AsteroidOS launcher and Wayland compositor based on Qt5, QML and QtWayland via Lipstick")
+	DESCRIPTION "BolideOS launcher and Wayland compositor based on Qt5, QML and QtWayland via Lipstick")
 
 find_package(ECM REQUIRED NO_MODULE)
 find_package(AsteroidApp REQUIRED)

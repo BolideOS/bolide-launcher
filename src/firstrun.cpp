@@ -36,7 +36,7 @@
 FirstRun::FirstRun()
 {
     m_mceDbus = new QDBusInterface("com.nokia.mce", "/com/nokia/mce/request", "com.nokia.mce.request", QDBusConnection::systemBus());
-    firstRunDone = new MGConfItem("/org/asteroidos/launcher/firstRunDone", this);
+    firstRunDone = new MGConfItem("/org/bolideos/launcher/firstRunDone", this);
 }
 
 bool FirstRun::isFirstRun()

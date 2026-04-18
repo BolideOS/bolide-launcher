@@ -326,7 +326,7 @@ Item {
                 ConfigurationValue {
                     id: useFahrenheit
 
-                    key: "/org/asteroidos/settings/use-fahrenheit"
+                    key: "/org/bolideos/settings/use-fahrenheit"
                     defaultValue: false
                 }
 

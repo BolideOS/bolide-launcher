@@ -28,7 +28,7 @@
  */
 
 import QtQuick 2.9
-import org.asteroid.launcher 1.0
+import org.bolide.launcher 1.0
 
 GestureFilterArea {
     id: panelsGrid

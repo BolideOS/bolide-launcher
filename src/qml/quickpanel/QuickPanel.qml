@@ -34,7 +34,7 @@ import QtGraphicalEffects 1.0
 import QtMultimedia 5.8
 import org.asteroid.controls 1.0
 import org.asteroid.utils 1.0
-import org.asteroid.launcher 1.0
+import org.bolide.launcher 1.0
 import org.nemomobile.systemsettings 1.0
 import Nemo.Configuration 1.0
 import Nemo.Mce 1.0
@@ -67,31 +67,31 @@ Item {
 
     ConfigurationValue {
         id: preMuteLevel
-        key: "/desktop/asteroid/pre-mute-level"
+        key: "/desktop/bolide/pre-mute-level"
         defaultValue: 80
     }
 
     ConfigurationValue {
         id: preCinemaAodState
-        key: "/desktop/asteroid/quickpanel/pre-cinema-aod-state"
+        key: "/desktop/bolide/quickpanel/pre-cinema-aod-state"
         defaultValue: true
     }
 
     ConfigurationValue {
         id: fixedToggles
-        key: "/desktop/asteroid/quickpanel/fixed"
+        key: "/desktop/bolide/quickpanel/fixed"
         defaultValue: ["lockButton", "settingsButton"]
     }
 
     ConfigurationValue {
         id: sliderToggles
-        key: "/desktop/asteroid/quickpanel/slider"
+        key: "/desktop/bolide/quickpanel/slider"
         defaultValue: ["brightnessToggle", "bluetoothToggle", "hapticsToggle", "wifiToggle", "soundToggle", "cinemaToggle", "aodToggle", "powerOffToggle", "rebootToggle", "musicButton", "flashlightButton"]
     }
 
     ConfigurationValue {
         id: toggleEnabled
-        key: "/desktop/asteroid/quickpanel/enabled"
+        key: "/desktop/bolide/quickpanel/enabled"
         defaultValue: {
             "lockButton": true,
             "settingsButton": true,
@@ -111,7 +111,7 @@ Item {
 
     ConfigurationValue {
         id: options
-        key: "/desktop/asteroid/quickpanel/options"
+        key: "/desktop/bolide/quickpanel/options"
         defaultValue: {
             "batteryBottom": true,
             "batteryAnimation": true,
@@ -771,7 +771,7 @@ Item {
         id: settingsButtonComponent
         QuickPanelToggle {
             icon: "ios-settings"
-            onClicked: appLauncher.launchApp("asteroid-settings")
+            onClicked: appLauncher.launchApp("bolide-settings")
         }
     }
 
