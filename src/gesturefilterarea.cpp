@@ -83,6 +83,8 @@ void GestureFilterArea::mousePressEvent(QMouseEvent *event) {
         m_tracing = true;
         m_horizontal = false;
         m_prevPos = event->localPos();
+        m_startPos = event->localPos();
+        m_prevTimestamp = event->timestamp();
         m_counter = 0;
     }
 }
@@ -94,11 +96,36 @@ void GestureFilterArea::mouseMoveEvent(QMouseEvent *event) {
     }
     m_counter++;
 
-    m_velocityX = (m_velocityX*(m_counter-1) + (event->localPos().x()-m_prevPos.x()))/m_counter;
-    m_velocityY = (m_velocityY*(m_counter-1) + (event->localPos().y()-m_prevPos.y()))/m_counter;
-    if(m_tracing) {
-        if (abs(m_velocityX) > abs(m_velocityY)) {
-            if(m_velocityX > m_threshold) {
+    qreal deltaX = event->localPos().x() - m_prevPos.x();
+    qreal deltaY = event->localPos().y() - m_prevPos.y();
+
+    // Use time-based velocity (px per ~16ms frame) to normalize across
+    // different event frequencies (QEMU USB tablet ~1000Hz vs real touch ~60-120Hz)
+    ulong ts = event->timestamp();
+    qreal dt = (ts > m_prevTimestamp) ? (qreal)(ts - m_prevTimestamp) : 1.0;
+    if (dt < 0.001) dt = 1.0;  // guard against zero/negative
+    qreal instantVx = deltaX / dt * 16.0;
+    qreal instantVy = deltaY / dt * 16.0;
+
+    const qreal alpha = 0.4;
+    if (m_counter == 1) {
+        m_velocityX = instantVx;
+        m_velocityY = instantVy;
+    } else {
+        m_velocityX = alpha * instantVx + (1.0 - alpha) * m_velocityX;
+        m_velocityY = alpha * instantVy + (1.0 - alpha) * m_velocityY;
+    }
+    m_prevTimestamp = ts;
+
+    if(m_tracing && m_counter >= 3) {
+        // Use total displacement from start for swipe direction detection,
+        // not per-event velocity (which is too small with high-frequency events)
+        qreal totalDx = event->localPos().x() - m_startPos.x();
+        qreal totalDy = event->localPos().y() - m_startPos.y();
+        qreal dispThreshold = m_threshold * 3;  // ~14px on 456px screen
+
+        if (abs(totalDx) > abs(totalDy)) {
+            if(totalDx > dispThreshold) {
                 m_tracing = false;
                 if(m_toRightAllowed) {
                     m_horizontal = true;
@@ -106,7 +133,7 @@ void GestureFilterArea::mouseMoveEvent(QMouseEvent *event) {
                 }
                 else
                     m_pressed = false;
-            } else if(m_velocityX < -m_threshold) {
+            } else if(totalDx < -dispThreshold) {
                 m_tracing = false;
                 if(m_toLeftAllowed) {
                     m_horizontal = true;
@@ -116,7 +143,7 @@ void GestureFilterArea::mouseMoveEvent(QMouseEvent *event) {
                     m_pressed = false;
             }
         } else {
-            if(m_velocityY > m_threshold) {
+            if(totalDy > dispThreshold) {
                 m_tracing = false;
                 if(m_toBottomAllowed) {
                     m_horizontal = false;
@@ -124,7 +151,7 @@ void GestureFilterArea::mouseMoveEvent(QMouseEvent *event) {
                 }
                 else
                     m_pressed = false;
-            } else if(m_velocityY < -m_threshold) {
+            } else if(totalDy < -dispThreshold) {
                 m_tracing = false;
                 if(m_toTopAllowed) {
                     m_horizontal = false;
@@ -151,13 +178,17 @@ void GestureFilterArea::mouseReleaseEvent(QMouseEvent *event) {
         QQuickItem::mouseReleaseEvent(event);
     } else {
         QQuickWindow *w = window();
-        if (w && w->mouseGrabberItem() == this && m_pressed){
+        QQuickItem *grabber = w ? w->mouseGrabberItem() : nullptr;
+        if (w && grabber == this && m_pressed){
             qreal currVel;
             if(m_horizontal)
                 currVel = m_velocityX;
             else
                 currVel = m_velocityY;
             emit swipeReleased(m_horizontal, currVel, m_tracing);
+            m_pressed = false;
+            ungrabMouse();
+        } else {
             m_pressed = false;
         }
     }
@@ -186,6 +217,7 @@ bool GestureFilterArea::filterMouseEvent(QQuickItem *item, QMouseEvent *event) {
         default:
             break;
         }
+    } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
     }
     return false;
 }
