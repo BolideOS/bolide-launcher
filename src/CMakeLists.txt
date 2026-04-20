@@ -35,3 +35,5 @@ install(DIRECTORY watchfaces-preview
 	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)
 install(DIRECTORY applauncher
 	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/wallpapers
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/bolide-launcher)

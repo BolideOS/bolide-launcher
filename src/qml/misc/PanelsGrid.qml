@@ -39,8 +39,14 @@ GestureFilterArea {
     /* Item that will move according to the user's needs */
     Item {
         id: content
-        onXChanged: if(normalizedVerOffset == 0) normalizedHorOffset = Math.min(Math.max(-(content.x/panelWidth),  -1), 1)
-        onYChanged: if(normalizedHorOffset == 0) normalizedVerOffset = Math.min(Math.max(-(content.y/panelHeight), -1), 1)
+        width:  panelWidth  * 3
+        height: panelHeight * 3
+        Component.onCompleted: {
+            x = -panelWidth
+            y = -panelHeight
+        }
+        onXChanged: if(normalizedVerOffset == 0) normalizedHorOffset = Math.min(Math.max(-(content.x/panelWidth)  - 1, -1), 1)
+        onYChanged: if(normalizedHorOffset == 0) normalizedVerOffset = Math.min(Math.max(-(content.y/panelHeight) - 1, -1), 1)
     }
 
     /* Panels handling */
@@ -53,8 +59,8 @@ GestureFilterArea {
         if (component.status === Component.Ready) {
             var panel = component.createObject(content)
 
-            panel.x = panelWidth*horizontalPos
-            panel.y = panelHeight*verticalPos
+            panel.x = panelWidth*(horizontalPos+1)
+            panel.y = panelHeight*(verticalPos+1)
             panel.width = panelWidth
             panel.height = panelHeight
             if(panel.panelsGrid !== undefined)
@@ -75,15 +81,15 @@ GestureFilterArea {
         var panel = panels[originHorizontalPos + "x" + originVerticalPos]
         if(panel !== undefined) {
             panels[destHorizontalPos + "x" + destVerticalPos] = panel
-            panel.x = panelWidth*destHorizontalPos
-            panel.y = panelHeight*destVerticalPos
+            panel.x = panelWidth*(destHorizontalPos+1)
+            panel.y = panelHeight*(destVerticalPos+1)
             panels[originHorizontalPos + "x" + originVerticalPos] = undefined
         }
     }
 
     function moveTo(posX, posY) {
-        content.x = -panelWidth*posX
-        content.y = -panelHeight*posY
+        content.x = -panelWidth*(posX+1)
+        content.y = -panelHeight*(posY+1)
         currentHorizontalPos = posX
         currentVerticalPos = posY
     }
@@ -101,7 +107,7 @@ GestureFilterArea {
         for(var name in panels) {
             if(panels[name] !== undefined) {
                 var horizontalPos = name.split('x')[0]
-                panels[name].x = panelWidth*horizontalPos
+                panels[name].x = panelWidth*(parseInt(horizontalPos)+1)
                 panels[name].width = panelWidth
             }
         }
@@ -111,7 +117,7 @@ GestureFilterArea {
         for(var name in panels) {
             if(panels[name] !== undefined) {
                 var verticalPos = name.split('x')[1]
-                panels[name].y = panelHeight*verticalPos
+                panels[name].y = panelHeight*(parseInt(verticalPos)+1)
                 panels[name].height = panelHeight
             }
         }
@@ -174,12 +180,12 @@ GestureFilterArea {
         panelsHideTimeout.stop()
         if(horizontal) {
             contentX = content.x + delta
-            var currentPanelX = -currentHorizontalPos*panelWidth
+            var currentPanelX = -panelWidth*(currentHorizontalPos+1)
             contentX = Math.min(contentX, currentPanelX + (toRightAllowed ? panelWidth  : 0))
             contentX = Math.max(contentX, currentPanelX + (toLeftAllowed  ? -panelWidth : 0))
         } else {
             contentY = content.y + delta
-            var currentPanelY = -currentVerticalPos*panelHeight
+            var currentPanelY = -panelHeight*(currentVerticalPos+1)
             contentY = Math.min(contentY, currentPanelY + (toBottomAllowed ? panelHeight  : 0))
             contentY = Math.max(contentY, currentPanelY + (toTopAllowed    ? -panelHeight : 0))
         }
@@ -195,24 +201,24 @@ GestureFilterArea {
     onSwipeReleased: {
         if(!tracing) {
             if(horizontal) {
-                var loc = contentX+currentHorizontalPos*panelWidth
+                var loc = contentX+panelWidth*(currentHorizontalPos+1)
                 if((loc > width/2) || velocity > 10 && toRightAllowed)
                     currentHorizontalPos--
                 else if((loc < -width/2) || velocity < -10 && toLeftAllowed)
                     currentHorizontalPos++
 
                 contentAnim.property = "x"
-                contentAnim.to = -panelWidth*currentHorizontalPos
+                contentAnim.to = -panelWidth*(currentHorizontalPos+1)
                 contentAnim.start()
             } else {
-                var loc = contentY+currentVerticalPos*panelHeight
+                var loc = contentY+panelHeight*(currentVerticalPos+1)
                 if((loc > height/2 && velocity > 0) || velocity > 10 && toBottomAllowed)
                     currentVerticalPos--
                 else if((loc < -height/2 && velocity < 0) || velocity < -10 && toTopAllowed)
                     currentVerticalPos++
 
                 contentAnim.property = "y"
-                contentAnim.to = -panelHeight*currentVerticalPos
+                contentAnim.to = -panelHeight*(currentVerticalPos+1)
                 contentAnim.start()
             }
         }
