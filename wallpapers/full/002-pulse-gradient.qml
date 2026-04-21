@@ -25,29 +25,43 @@ Item {
     property color centerColor: typeof bgCenterColor !== "undefined" ? bgCenterColor : "#0044A6"
     property color outerColor: typeof bgOuterColor !== "undefined" ? bgOuterColor : "#00010C"
 
-    property real pulse: 0.0
+    // Multiple independent phases at irrational-ratio durations
+    // so the motion never visibly repeats
+    property real t1: 0.0
+    property real t2: 0.0
+    property real t3: 0.0
+    property real t4: 0.0
 
-    NumberAnimation on pulse {
-        from: 0.0
-        to: 1.0
-        duration: 8000
+    NumberAnimation on t1 {
+        from: 0; to: Math.PI * 2; duration: 37000
         loops: Animation.Infinite
-        easing.type: Easing.InOutSine
+    }
+    NumberAnimation on t2 {
+        from: 0; to: Math.PI * 2; duration: 53000
+        loops: Animation.Infinite
+    }
+    NumberAnimation on t3 {
+        from: 0; to: Math.PI * 2; duration: 43000
+        loops: Animation.Infinite
+    }
+    NumberAnimation on t4 {
+        from: 0; to: Math.PI * 2; duration: 61000
+        loops: Animation.Infinite
     }
 
-    // Slowly shifting radial gradient
     RadialGradient {
-        id: gradient
         anchors.fill: parent
-        horizontalOffset: Math.sin(root.pulse * Math.PI * 2) * parent.width * 0.15
-        verticalOffset: Math.cos(root.pulse * Math.PI * 2) * parent.height * 0.15
-        horizontalRadius: parent.width * (0.5 + 0.2 * Math.sin(root.pulse * Math.PI * 2))
-        verticalRadius: parent.height * (0.5 + 0.2 * Math.cos(root.pulse * Math.PI * 2 + 1.0))
+        horizontalOffset: Math.sin(root.t1) * parent.width * 0.08
+                        + Math.sin(root.t3 * 0.7) * parent.width * 0.04
+        verticalOffset: Math.cos(root.t2) * parent.height * 0.08
+                      + Math.cos(root.t4 * 0.6) * parent.height * 0.04
+        horizontalRadius: parent.width * (0.55 + 0.08 * Math.sin(root.t3))
+        verticalRadius: parent.height * (0.55 + 0.08 * Math.cos(root.t1 * 0.8))
 
         gradient: Gradient {
             GradientStop {
                 position: 0.0
-                color: Qt.lighter(root.centerColor, 1.0 + 0.3 * Math.sin(root.pulse * Math.PI * 2))
+                color: Qt.lighter(root.centerColor, 1.0 + 0.12 * Math.sin(root.t4))
             }
             GradientStop {
                 position: 0.5
@@ -60,19 +74,18 @@ Item {
         }
     }
 
-    // Second subtle gradient layer for depth
     RadialGradient {
         anchors.fill: parent
-        opacity: 0.3 + 0.15 * Math.sin(root.pulse * Math.PI * 2 + 2.0)
-        horizontalOffset: Math.cos(root.pulse * Math.PI * 2 + 1.5) * parent.width * 0.2
-        verticalOffset: Math.sin(root.pulse * Math.PI * 2 + 1.5) * parent.height * 0.2
-        horizontalRadius: parent.width * 0.4
-        verticalRadius: parent.height * 0.4
+        opacity: 0.2 + 0.08 * Math.sin(root.t2 + 1.0)
+        horizontalOffset: Math.cos(root.t4) * parent.width * 0.1
+        verticalOffset: Math.sin(root.t1 + 2.0) * parent.height * 0.1
+        horizontalRadius: parent.width * 0.35
+        verticalRadius: parent.height * 0.35
 
         gradient: Gradient {
             GradientStop {
                 position: 0.0
-                color: Qt.lighter(root.centerColor, 1.4)
+                color: Qt.lighter(root.centerColor, 1.25)
             }
             GradientStop {
                 position: 1.0
