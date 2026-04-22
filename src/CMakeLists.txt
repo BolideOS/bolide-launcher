@@ -12,9 +12,17 @@ set(HEADERS
 	gesturefilterarea.h
 	launcherlocalemanager.h
 	applauncher.h
-	notificationsnoozer.h)
+	notificationsnoozer.h
+	preloadhelper.h)
 
-add_executable(bolide-launcher ${SRC} ${HEADERS} resources-qml.qrc)
+find_package(Qt5QuickCompiler)
+if(Qt5QuickCompiler_FOUND)
+    qtquick_compiler_add_resources(RESOURCES resources-qml.qrc)
+else()
+    qt5_add_resources(RESOURCES resources-qml.qrc)
+endif()
+
+add_executable(bolide-launcher ${SRC} ${HEADERS} ${RESOURCES})
 
 target_link_libraries(bolide-launcher PRIVATE
 	Qt5::Quick

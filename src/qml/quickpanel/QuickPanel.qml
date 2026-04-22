@@ -41,6 +41,7 @@ import Nemo.Mce 1.0
 import Nemo.DBus 2.0
 import Nemo.Ngf 1.0
 import Connman 0.2
+import "desktop.js" as Desktop
 
 Item {
     id: rootitem
@@ -776,7 +777,21 @@ Item {
         id: settingsButtonComponent
         QuickPanelToggle {
             icon: "ios-settings"
-            onClicked: appLauncher.launchApp("bolide-settings")
+            onClicked: {
+                Desktop.launchTimestamp = Date.now()
+                Desktop.launchAppName = "bolide-settings"
+                console.warn("[LAUNCH] Settings button clicked at " + Desktop.launchTimestamp)
+                console.warn("[LAUNCH] raiseAppFunc=" + Desktop.raiseAppFunc + " cachedWindows=" + JSON.stringify(Object.keys(Desktop.cachedWindows)))
+                // Try to raise cached window first (instant)
+                if (Desktop.raiseAppFunc && Desktop.raiseAppFunc("Settings")) {
+                    console.warn("[TIMING] Settings raised from cache in " + (Date.now() - Desktop.launchTimestamp) + "ms")
+                    Desktop.launchTimestamp = 0
+                } else {
+                    console.warn("[LAUNCH] cache miss, falling back to invoker")
+                    appLauncher.launchApp("bolide-settings")
+                    console.warn("[LAUNCH] launchApp returned at " + Date.now())
+                }
+            }
         }
     }
 

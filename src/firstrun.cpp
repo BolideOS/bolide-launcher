@@ -41,7 +41,8 @@ FirstRun::FirstRun(QObject *parent) : QObject(parent)
 
 bool FirstRun::isFirstRun()
 {
-    return !firstRunDone->value(false).toBool();;
+    // Tutorial disabled — goes straight to the launcher
+    return false;
 }
 
 void FirstRun::startFirstRun()

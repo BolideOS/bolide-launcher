@@ -35,6 +35,7 @@
 #include <QQmlContext>
 #include <QTranslator>
 #include <QProcess>
+#include <QTimer>
 
 #include <lipstickqmlpath.h>
 #include <homeapplication.h>
@@ -47,6 +48,7 @@
 #include "gesturefilterarea.h"
 #include "notificationsnoozer.h"
 #include "applauncher.h"
+#include "preloadhelper.h"
 
 int main(int argc, char **argv)
 {
@@ -84,6 +86,9 @@ int main(int argc, char **argv)
     app.engine()->rootContext()->setContextProperty("nativeOrientation", nativeOrientation);
     app.engine()->rootContext()->setContextProperty("firstRun", firstRun);
 
+    PreloadHelper *preloadHelper = new PreloadHelper(&app);
+    app.engine()->rootContext()->setContextProperty("preloadHelper", preloadHelper);
+
     qmlRegisterType<AppLauncherBackground>("org.bolide.launcher", 1, 0, "AppLauncherBackground");
     qmlRegisterType<GestureFilterArea>("org.bolide.launcher", 1, 0, "GestureFilterArea");
     qmlRegisterType<NotificationSnoozer>("org.bolide.launcher", 1, 0, "NotificationSnoozer");
@@ -96,5 +101,14 @@ int main(int argc, char **argv)
     setenv("QT_QPA_PLATFORM", "wayland", 1);
     setenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", 1);
     app.mainWindowInstance()->showFullScreen();
+
+    // Preload settings app 3s after boot so it's ready for instant re-raise
+    QTimer::singleShot(3000, []{
+        qWarning("[LAUNCH] Preloading bolide-settings via invoker");
+        QProcess::startDetached(QStringLiteral("invoker"),
+            QStringList() << "--single-instance" << "--type=qt5"
+                          << "/usr/lib/bolide-settings.so");
+    });
+
     return app.exec();
 }
