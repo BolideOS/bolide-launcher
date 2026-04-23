@@ -169,7 +169,7 @@ Item {
 
     WallClock {
         id: wallClock
-        enabled: desktop.visible
+        enabled: desktop.visible && Lipstick.compositor.displayOn
         updateFrequency: WallClock.Second
     }
 
@@ -244,7 +244,7 @@ Item {
     ConfigurationValue {
         id: appLauncherSource
         key: "/desktop/bolide/applauncher"
-        defaultValue: "file:///usr/share/bolide-launcher/applauncher/000-default-horizontal.qml"
+        defaultValue: "file:///usr/share/bolide-launcher/applauncher/006-glances.qml"
     }
 
     ConfigurationValue {

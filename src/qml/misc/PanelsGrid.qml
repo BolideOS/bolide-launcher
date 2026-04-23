@@ -199,28 +199,28 @@ GestureFilterArea {
     }
 
     onSwipeReleased: {
-        if(!tracing) {
-            if(horizontal) {
-                var loc = contentX+panelWidth*(currentHorizontalPos+1)
-                if((loc > width/2) || velocity > 10 && toRightAllowed)
-                    currentHorizontalPos--
-                else if((loc < -width/2) || velocity < -10 && toLeftAllowed)
-                    currentHorizontalPos++
+        if(horizontal) {
+            var loc = contentX+panelWidth*(currentHorizontalPos+1)
+            // For tracing releases (short flicks where direction wasn't committed),
+            // loc is ~0 since no swipeMoved was emitted. Use velocity alone.
+            if((loc > width * 0.15) || (velocity > 2 && toRightAllowed))
+                currentHorizontalPos--
+            else if((loc < -width * 0.15) || (velocity < -2 && toLeftAllowed))
+                currentHorizontalPos++
 
-                contentAnim.property = "x"
-                contentAnim.to = -panelWidth*(currentHorizontalPos+1)
-                contentAnim.start()
-            } else {
-                var loc = contentY+panelHeight*(currentVerticalPos+1)
-                if((loc > height/2 && velocity > 0) || velocity > 10 && toBottomAllowed)
-                    currentVerticalPos--
-                else if((loc < -height/2 && velocity < 0) || velocity < -10 && toTopAllowed)
-                    currentVerticalPos++
+            contentAnim.property = "x"
+            contentAnim.to = -panelWidth*(currentHorizontalPos+1)
+            contentAnim.start()
+        } else {
+            var loc = contentY+panelHeight*(currentVerticalPos+1)
+            if((loc > height * 0.15) || (velocity > 2 && toBottomAllowed))
+                currentVerticalPos--
+            else if((loc < -height * 0.15) || (velocity < -2 && toTopAllowed))
+                currentVerticalPos++
 
-                contentAnim.property = "y"
-                contentAnim.to = -panelHeight*(currentVerticalPos+1)
-                contentAnim.start()
-            }
+            contentAnim.property = "y"
+            contentAnim.to = -panelHeight*(currentVerticalPos+1)
+            contentAnim.start()
         }
 
         animateIndicators()
@@ -237,7 +237,8 @@ GestureFilterArea {
     NumberAnimation {
         id: contentAnim
         target: content
-        duration: 100
+        duration: 200
+        easing.type: Easing.OutCubic
         onStopped: panelsHideTimeout.restart()
     }
 }

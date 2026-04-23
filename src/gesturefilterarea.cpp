@@ -61,10 +61,6 @@ bool GestureFilterArea::childMouseEventFilter(QQuickItem *i, QEvent *e)
     case QEvent::MouseButtonRelease:
         return filterMouseEvent(i, static_cast<QMouseEvent *>(e));
     case QEvent::UngrabMouse:
-        if (window() && window()->mouseGrabberItem() && window()->mouseGrabberItem() != this) {
-            // The grab has been taken away from a child and given to some other item.
-            mouseUngrabEvent();
-        }
         break;
     default:
         break;
@@ -122,7 +118,7 @@ void GestureFilterArea::mouseMoveEvent(QMouseEvent *event) {
         // not per-event velocity (which is too small with high-frequency events)
         qreal totalDx = event->localPos().x() - m_startPos.x();
         qreal totalDy = event->localPos().y() - m_startPos.y();
-        qreal dispThreshold = m_threshold * 3;  // ~14px on 456px screen
+        qreal dispThreshold = m_threshold * 5;  // ~16px on 320px
 
         if (abs(totalDx) > abs(totalDy)) {
             if(totalDx > dispThreshold) {
@@ -161,7 +157,8 @@ void GestureFilterArea::mouseMoveEvent(QMouseEvent *event) {
                     m_pressed = false;
             }
         }
-    } else if(m_pressed) {
+    } else if(m_pressed && !m_tracing) {
+        // Only emit movement AFTER direction is committed — prevents cross-axis jitter
         qreal delta;
         if(m_horizontal)
             delta = event->localPos().x() - m_prevPos.x();
@@ -177,20 +174,22 @@ void GestureFilterArea::mouseReleaseEvent(QMouseEvent *event) {
     if (!isEnabled() || !m_pressed) {
         QQuickItem::mouseReleaseEvent(event);
     } else {
-        QQuickWindow *w = window();
-        QQuickItem *grabber = w ? w->mouseGrabberItem() : nullptr;
-        if (w && grabber == this && m_pressed){
-            qreal currVel;
-            if(m_horizontal)
-                currVel = m_velocityX;
-            else
-                currVel = m_velocityY;
-            emit swipeReleased(m_horizontal, currVel, m_tracing);
-            m_pressed = false;
-            ungrabMouse();
-        } else {
-            m_pressed = false;
+        // If still tracing (direction not committed), determine direction
+        // from total displacement so PanelsGrid can still snap
+        if (m_tracing) {
+            qreal totalDx = event->localPos().x() - m_startPos.x();
+            qreal totalDy = event->localPos().y() - m_startPos.y();
+            m_horizontal = qAbs(totalDx) > qAbs(totalDy);
         }
+        qreal currVel;
+        if(m_horizontal)
+            currVel = m_velocityX;
+        else
+            currVel = m_velocityY;
+        emit swipeReleased(m_horizontal, currVel, m_tracing);
+        m_pressed = false;
+        if (window() && window()->mouseGrabberItem() == this)
+            ungrabMouse();
     }
 }
 
@@ -199,7 +198,8 @@ bool GestureFilterArea::filterMouseEvent(QQuickItem *item, QMouseEvent *event) {
     QQuickWindow *c = window();
     QQuickItem *grabber = c ? c->mouseGrabberItem() : 0;
 
-    if ((contains(localPos)) && (!grabber || !grabber->keepMouseGrab())) {
+    // Process events when: no dominant grabber, OR we're actively tracking a gesture
+    if (contains(localPos) && (m_pressed || !grabber || !grabber->keepMouseGrab())) {
         QMouseEvent mouseEvent(event->type(), localPos, event->windowPos(), event->screenPos(),
                                event->button(), event->buttons(), event->modifiers());
         mouseEvent.setAccepted(false);
@@ -217,11 +217,15 @@ bool GestureFilterArea::filterMouseEvent(QQuickItem *item, QMouseEvent *event) {
         default:
             break;
         }
-    } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
     }
     return false;
 }
 
 void GestureFilterArea::mouseUngrabEvent() {
+    if (m_pressed && !m_tracing) {
+        // Grab was stolen during an active panel swipe — still snap
+        qreal currVel = m_horizontal ? m_velocityX : m_velocityY;
+        emit swipeReleased(m_horizontal, currVel, false);
+    }
     m_pressed = false;
 }
